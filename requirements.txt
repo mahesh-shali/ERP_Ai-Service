@@ -1,0 +1,12 @@
+fastapi==0.115.14
+uvicorn[standard]==0.34.3
+langgraph==0.2.76
+langchain-openai==0.3.27
+sqlalchemy[asyncio]==2.0.41
+asyncpg==0.30.0
+python-dotenv==1.1.1
+pydantic-settings==2.10.1
+sqlglot==26.33.0
+pytest==8.4.1
+httpx==0.28.1
+redis==5.3.1
