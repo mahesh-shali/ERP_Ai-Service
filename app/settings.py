@@ -65,6 +65,25 @@ class Settings(BaseSettings):
         default="",
         validation_alias=AliasChoices("AI_SERVICE_API_KEY", "AiService__ApiKey", "ai_service_api_key"),
     )
+    serpapi_api_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "SERPAPI_API_KEY",
+            "SERP_API_KEY",
+            "SerpApi__ApiKey",
+            "SERPAPI__API_KEY",
+            "serpapi_api_key",
+        ),
+    )
+    openclaw_api_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "OPENCLAW_API_KEY",
+            "OpenClaw__ApiKey",
+            "CMDOP_API_KEY",
+            "openclaw_api_key",
+        ),
+    )
     allowed_origins: str = "http://localhost:3000"
     max_result_rows: int = 50
     redis_url: str = ""

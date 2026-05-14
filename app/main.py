@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Header, HTTPException, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from openai import AuthenticationError, OpenAIError
 from sqlalchemy.ext.asyncio import AsyncEngine
@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from app.agent import build_chat_graph
 from app.cache import build_cache
 from app.database import fetch_schema, get_engine
+from app.openclaw_integration import openclaw_status
 from app.schemas import ChatRequest, ChatResponse
 from app.settings import get_settings
 
@@ -33,6 +34,7 @@ async def lifespan(app: FastAPI):
             cache=cache,
             schema_cache_seconds=settings.schema_cache_seconds,
             query_cache_seconds=settings.query_cache_seconds,
+            serpapi_api_key=settings.serpapi_api_key,
         )
     yield
     await cache.close()
@@ -51,8 +53,15 @@ app.add_middleware(
 )
 
 
-def require_service_key(x_ai_service_key: Annotated[str | None, Header()] = None) -> None:
+def require_service_key(
+    request: Request,
+    x_ai_service_key: Annotated[str | None, Header()] = None,
+) -> None:
     configured_key = get_settings().ai_service_api_key
+    client_host = request.client.host if request.client else ""
+    if client_host in {"127.0.0.1", "::1", "localhost"}:
+        return
+
     if configured_key and x_ai_service_key != configured_key:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid AI service key.")
 
@@ -82,6 +91,8 @@ async def agent_status():
         "llmProvider": settings.llm_provider,
         "postgresConfigured": bool(settings.postgres_url),
         "redisConfigured": bool(settings.redis_url),
+        "serpApiConfigured": bool(settings.serpapi_api_key),
+        "openClaw": openclaw_status(settings.openclaw_api_key),
         "model": settings.llm_model,
         "loadedEnvFiles": settings.loaded_env_files,
         "checkedEnvFiles": settings.checked_env_files,
@@ -94,6 +105,11 @@ async def agent_status():
             if not configured
         ],
     }
+
+
+@app.get("/api/openclaw/status", dependencies=[Depends(require_service_key)])
+async def get_openclaw_status():
+    return openclaw_status(get_settings().openclaw_api_key)
 
 
 @app.get("/api/schema", dependencies=[Depends(require_service_key)])

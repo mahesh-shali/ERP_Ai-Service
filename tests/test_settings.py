@@ -25,3 +25,15 @@ def test_settings_accepts_connection_string_alias():
     settings = Settings(ConnectionStrings__DefaultConnection="Host=db;Database=erp;Username=user")
 
     assert settings.postgres_url == "Host=db;Database=erp;Username=user"
+
+
+def test_settings_accepts_serpapi_alias():
+    settings = Settings(SERPAPI_API_KEY="serp-key")
+
+    assert settings.serpapi_api_key == "serp-key"
+
+
+def test_settings_accepts_openclaw_alias():
+    settings = Settings(OPENCLAW_API_KEY="cmdop-key")
+
+    assert settings.openclaw_api_key == "cmdop-key"
