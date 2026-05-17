@@ -39,6 +39,12 @@ def test_settings_accepts_openclaw_alias():
     assert settings.openclaw_api_key == "cmdop-key"
 
 
+def test_settings_uses_default_ai_service_key():
+    settings = Settings()
+
+    assert settings.ai_service_api_key == "dev-internal-ai-key-change-me"
+
+
 def test_settings_accepts_render_port_and_host():
     settings = Settings(PORT="10000", HOST="0.0.0.0")
 

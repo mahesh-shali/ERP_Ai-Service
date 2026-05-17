@@ -29,7 +29,7 @@ OPENAI_API_KEY=sk-your-openai-key
 OPENAI_MODEL=gpt-4.1-mini
 GROQ_API_KEY=gsk-your-groq-key
 GROQ_MODEL=llama-3.3-70b-versatile
-AI_SERVICE_API_KEY=replace-with-a-long-random-internal-key
+AI_SERVICE_API_KEY=dev-internal-ai-key-change-me
 REDIS_URL=rediss://:password@host:6379/0
 ```
 
@@ -75,7 +75,7 @@ On Vercel frontend, set:
 
 ```env
 AI_SERVICE_URL=https://your-render-ai-service.onrender.com
-AI_SERVICE_API_KEY=replace-with-the-same-key-used-on-render
+AI_SERVICE_API_KEY=dev-internal-ai-key-change-me
 ```
 
 ## Debug In VS Code

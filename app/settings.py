@@ -10,6 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = ROOT.parent
 CURRENT_WORKING_DIRECTORY = Path.cwd()
+DEFAULT_AI_SERVICE_API_KEY = "dev-internal-ai-key-change-me"
 
 ENV_FILES = [
     CURRENT_WORKING_DIRECTORY / ".env",
@@ -63,7 +64,7 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("GROQ_MODEL", "Groq__Model", "groq_model"),
     )
     ai_service_api_key: str = Field(
-        default="",
+        default=DEFAULT_AI_SERVICE_API_KEY,
         validation_alias=AliasChoices("AI_SERVICE_API_KEY", "AiService__ApiKey", "ai_service_api_key"),
     )
     serpapi_api_key: str = Field(

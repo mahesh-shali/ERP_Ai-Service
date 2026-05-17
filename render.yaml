@@ -18,7 +18,7 @@ services:
       - key: GROQ_MODEL
         value: llama-3.3-70b-versatile
       - key: AI_SERVICE_API_KEY
-        sync: false
+        value: dev-internal-ai-key-change-me
       - key: SERPAPI_API_KEY
         sync: false
       - key: REDIS_URL
