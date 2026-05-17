@@ -8,6 +8,7 @@ __pycache__/
 .env.*
 !.env.example
 !.env.development.example
+!.env.production.example
 
 *.pyc
 *.pyo

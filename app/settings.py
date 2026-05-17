@@ -1,4 +1,5 @@
 from functools import lru_cache
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -84,17 +85,45 @@ class Settings(BaseSettings):
             "openclaw_api_key",
         ),
     )
-    allowed_origins: str = "http://localhost:3000"
+    allowed_origins: str = Field(
+        default="http://localhost:3000,https://erp-frontend-rust.vercel.app",
+        validation_alias=AliasChoices("ALLOWED_ORIGINS", "CORS_ORIGINS", "AllowedOrigins", "allowed_origins"),
+    )
     max_result_rows: int = 50
     redis_url: str = ""
     schema_cache_seconds: int = 600
     query_cache_seconds: int = 60
+    host: str = Field(
+        default="",
+        validation_alias=AliasChoices("HOST", "AI_SERVICE_HOST", "host"),
+    )
+    port: int = Field(
+        default=8001,
+        validation_alias=AliasChoices("PORT", "AI_SERVICE_PORT", "port"),
+    )
+    reload: bool = Field(
+        default=False,
+        validation_alias=AliasChoices("RELOAD", "UVICORN_RELOAD", "reload"),
+    )
 
     model_config = SettingsConfigDict(env_file=None, extra="ignore")
 
     @property
     def cors_origins(self) -> list[str]:
-        return [origin.strip() for origin in self.allowed_origins.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.allowed_origins.split(",") if origin.strip()]
+        for key, value in os.environ.items():
+            if key.startswith("Cors__Origins__") and value.strip():
+                origins.append(value.strip())
+
+        return list(dict.fromkeys(origins))
+
+    @property
+    def uvicorn_host(self) -> str:
+        if self.host:
+            return self.host
+        if os.environ.get("PORT"):
+            return "0.0.0.0"
+        return "127.0.0.1"
 
     @property
     def postgres_url(self) -> str:

@@ -37,3 +37,30 @@ def test_settings_accepts_openclaw_alias():
     settings = Settings(OPENCLAW_API_KEY="cmdop-key")
 
     assert settings.openclaw_api_key == "cmdop-key"
+
+
+def test_settings_accepts_render_port_and_host():
+    settings = Settings(PORT="10000", HOST="0.0.0.0")
+
+    assert settings.port == 10000
+    assert settings.uvicorn_host == "0.0.0.0"
+
+
+def test_settings_uses_render_host_when_port_exists(monkeypatch):
+    monkeypatch.setenv("PORT", "10000")
+    settings = Settings()
+
+    assert settings.uvicorn_host == "0.0.0.0"
+
+
+def test_settings_keeps_local_host_without_render_port(monkeypatch):
+    monkeypatch.delenv("PORT", raising=False)
+    settings = Settings()
+
+    assert settings.uvicorn_host == "127.0.0.1"
+
+
+def test_settings_accepts_allowed_origins_alias():
+    settings = Settings(ALLOWED_ORIGINS="https://erp-frontend-rust.vercel.app,http://localhost:3000")
+
+    assert settings.cors_origins == ["https://erp-frontend-rust.vercel.app", "http://localhost:3000"]

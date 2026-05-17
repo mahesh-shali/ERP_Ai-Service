@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: erp-ai-service
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m app.server
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: ALLOWED_ORIGINS
+        value: https://erp-frontend-rust.vercel.app,http://localhost:3000
+      - key: DATABASE_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: AI_SERVICE_API_KEY
+        sync: false
+      - key: SERPAPI_API_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false
