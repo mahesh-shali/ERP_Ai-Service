@@ -28,11 +28,25 @@ for env_file in ENV_FILES:
 class Settings(BaseSettings):
     database_url: str = Field(
         default="",
-        validation_alias=AliasChoices("DATABASE_URL", "database_url"),
+        validation_alias=AliasChoices(
+            "DATABASE_URL",
+            "POSTGRES_URL",
+            "POSTGRESQL_URL",
+            "DATABASE_PUBLIC_URL",
+            "DATABASE_INTERNAL_URL",
+            "RENDER_DATABASE_URL",
+            "database_url",
+        ),
     )
     connectionstrings__defaultconnection: str = Field(
         default="",
-        validation_alias=AliasChoices("ConnectionStrings__DefaultConnection", "connectionstrings__defaultconnection"),
+        validation_alias=AliasChoices(
+            "ConnectionStrings__DefaultConnection",
+            "ConnectionStrings__Default",
+            "DEFAULT_CONNECTION",
+            "PG_CONNECTION_STRING",
+            "connectionstrings__defaultconnection",
+        ),
     )
     openai_api_key: str = Field(
         default="",
@@ -129,6 +143,22 @@ class Settings(BaseSettings):
     @property
     def postgres_url(self) -> str:
         return self.database_url or self.connectionstrings__defaultconnection
+
+    @property
+    def configured_database_env_names(self) -> list[str]:
+        names = [
+            "DATABASE_URL",
+            "POSTGRES_URL",
+            "POSTGRESQL_URL",
+            "DATABASE_PUBLIC_URL",
+            "DATABASE_INTERNAL_URL",
+            "RENDER_DATABASE_URL",
+            "ConnectionStrings__DefaultConnection",
+            "ConnectionStrings__Default",
+            "DEFAULT_CONNECTION",
+            "PG_CONNECTION_STRING",
+        ]
+        return [name for name in names if os.environ.get(name)]
 
     @property
     def llm_configured(self) -> bool:

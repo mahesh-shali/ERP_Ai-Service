@@ -90,6 +90,7 @@ async def agent_status():
         "groqConfigured": bool(settings.groq_api_key),
         "llmProvider": settings.llm_provider,
         "postgresConfigured": bool(settings.postgres_url),
+        "configuredDatabaseEnvNames": settings.configured_database_env_names,
         "redisConfigured": bool(settings.redis_url),
         "serpApiConfigured": bool(settings.serpapi_api_key),
         "openClaw": openclaw_status(settings.openclaw_api_key),

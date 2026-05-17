@@ -13,6 +13,10 @@ services:
         value: https://erp-frontend-rust.vercel.app,http://localhost:3000
       - key: DATABASE_URL
         sync: false
+      # If your Render/Aiven/Postgres provider uses another variable name,
+      # the service also accepts POSTGRES_URL, POSTGRESQL_URL,
+      # DATABASE_PUBLIC_URL, DATABASE_INTERNAL_URL, RENDER_DATABASE_URL,
+      # and ConnectionStrings__DefaultConnection.
       - key: GROQ_API_KEY
         sync: false
       - key: GROQ_MODEL

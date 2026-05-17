@@ -27,6 +27,18 @@ def test_settings_accepts_connection_string_alias():
     assert settings.postgres_url == "Host=db;Database=erp;Username=user"
 
 
+def test_settings_accepts_render_postgres_aliases():
+    settings = Settings(POSTGRES_URL="postgres://user:pass@host:5432/db")
+
+    assert settings.postgres_url == "postgres://user:pass@host:5432/db"
+
+
+def test_settings_accepts_pg_connection_string_alias():
+    settings = Settings(PG_CONNECTION_STRING="Host=db;Database=erp;Username=user")
+
+    assert settings.postgres_url == "Host=db;Database=erp;Username=user"
+
+
 def test_settings_accepts_serpapi_alias():
     settings = Settings(SERPAPI_API_KEY="serp-key")
 
